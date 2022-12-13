@@ -8,7 +8,6 @@ import Typography from "@mui/material/Typography";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import CloseIcon from "@mui/icons-material/Close";
-import { Identity } from "@mui/base";
 
 function Mypage(props) {
   const [posts, setPosts] = useState([]);
@@ -18,24 +17,35 @@ function Mypage(props) {
   const [pubDate, setPubDate] = useState();
   const [userRating, setUserRating] = useState();
   const [note, setNote] = useState();
+  const [selectItem, setSelectItem] = useState({});
 
   //모달창 밖 클릭시 모달창 닫기
   const modalRef = useRef(null);
   const imageRef = useRef(null);
 
-  const onUpdate = (e) => {
-    e.preventDefault();
+  const onUpdate = () => {
+    // e.preventDefault();
 
-    const title = e.target.title.value;
-    const pubDate = e.target.pubDate.value;
-    const image = imageRef.current;
-    const userRating = e.target.userRating.value;
-    const note = e.target.note.value;
+    const newPosts = [
+      ...posts.map((arr) =>
+        arr.id === selectItem.id
+          ? {
+              ...selectItem,
+              title: title,
+              pubDate: pubDate,
+              image: imageRef.current,
+              userRating: userRating,
+              note: note,
+            }
+          : arr
+      ),
+    ];
 
-    props.onUpdate(title, pubDate, image, userRating, note);
+    setPosts(newPosts);
+
+    localStorage.setItem("logArr", JSON.stringify(newPosts));
 
     setToggleShow(false);
-    console.log(posts);
 
     alert("수정 되었습니다");
   };
@@ -53,8 +63,10 @@ function Mypage(props) {
   }, []);
 
   const remove = (id) => {
-    //! mypage에서는 삭제되었는데 새로고침하면 원상태로 됨
-    //! app.js에서 localStorage에 있는 데이터를 state변경이 될 때마다 useEffect로 다시 그려줘서 그런가?
+    localStorage.setItem(
+      "logArr",
+      JSON.stringify(posts.filter((item) => id !== item.id))
+    );
     setPosts((post) => post.filter((item) => id !== item.id));
   };
 
@@ -100,6 +112,8 @@ function Mypage(props) {
                     <div>
                       <DriveFileRenameOutlineIcon
                         onClick={() => {
+                          setSelectItem(item);
+
                           setToggleShow(!toggleShow);
                           setTitle(item.title);
                           setPubDate(item.pubDate);
@@ -107,12 +121,12 @@ function Mypage(props) {
                           // console.log(imageRef.current);
                           setUserRating(item.userRating);
                           setNote(item.note);
-                          console.log(item.id);
+                          // console.log(item.id);
                         }}
                       ></DriveFileRenameOutlineIcon>
                       <DeleteIcon
                         onClick={() => {
-                          console.log(item.id);
+                          // console.log(item.id);
                           remove(item.id);
                         }}
                       ></DeleteIcon>
@@ -151,6 +165,9 @@ function Mypage(props) {
                     name="title"
                     value={title}
                     placeholder={title}
+                    onChange={(e) => {
+                      setTitle(e.target.value);
+                    }}
                   ></input>
                 </p>
                 <p>
@@ -159,6 +176,9 @@ function Mypage(props) {
                     name="pubDate"
                     value={pubDate}
                     placeholder={pubDate}
+                    onChange={(e) => {
+                      setUserRating(e.target.value);
+                    }}
                   ></input>
                 </p>
                 <p>
@@ -167,6 +187,9 @@ function Mypage(props) {
                     name="userRating"
                     value={userRating}
                     placeholder={userRating}
+                    onChange={(e) => {
+                      setUserRating(e.target.value);
+                    }}
                   ></input>
                 </p>
                 <p>

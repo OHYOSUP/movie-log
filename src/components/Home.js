@@ -84,9 +84,10 @@ function Home() {
                       row
                       aria-labelledby="demo-row-radio-buttons-group-label"
                       name="row-radio-buttons-group"
+                      defaultValue="day"
                     >
                       <FormControlLabel
-                        value="female"
+                        value="day"
                         control={<Radio/>}                        
                         
                         label="일간"
@@ -96,7 +97,7 @@ function Home() {
                         }}
                       />
                       <FormControlLabel
-                        value="male"
+                        value="week"
                         control={<Radio />}
                         label="주간"
                         onClick={() => {
@@ -104,7 +105,7 @@ function Home() {
                         }}
                       />
                       <FormControlLabel
-                        value="other"
+                        value="month"
                         control={<Radio />}
                         label="월간"
                         onClick={() => {
@@ -118,15 +119,15 @@ function Home() {
               <table>
                 <thead>
                   <tr>
-                    {tableHeadOption.map((item) => (
-                      <th>{item}</th>
+                    {tableHeadOption.map((item, i) => (
+                      <th key = {i}>{item}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {type === "day" &&
-                    posts.map((item) => (
-                      <tr>
+                    posts.map((item, i) => (
+                      <tr key = {i}>
                         <TdWrapper>{item.movieNm}</TdWrapper>
                         <TdWrapper>{item.openDt}</TdWrapper>
                         <TdWrapper>

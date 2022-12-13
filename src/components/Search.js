@@ -8,13 +8,16 @@ import CloseIcon from "@mui/icons-material/Close";
 
 function Search(props) {
   const [posts, setPosts] = useState([]);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(
+    localStorage.getItem("searchKeyword") !== null
+      ? localStorage.getItem("searchKeyword")
+      : ""
+  );
   const [imageUrl, setImageUrl] = useState();
   const [title, setTitle] = useState();
   const [pubDate, setPubDate] = useState();
   const [userRating, setUserRating] = useState();
   const [note, setNote] = useState();
-
   const [toggleShow, setToggleShow] = useState(false);
 
   const searchMovieData = async () => {
@@ -28,9 +31,12 @@ function Search(props) {
     setPosts(data);
   };
 
+
+
   const theadOptions = ["", "제목", "개봉년도", "네이버 평점", "담기"];
 
   const searchMovie = (e) => {
+    localStorage.setItem("searchKeyword", e.target.value);
     setSearch(e.target.value);
   };
 
@@ -66,8 +72,11 @@ function Search(props) {
   });
 
   useEffect(() => {
-    searchMovieData();
-  }, [posts]);
+    if(search !== "" && search.length > 5){
+      searchMovieData();
+    }
+    // console.log('data')
+  }, []);
 
   return (
     <BackgroundWrapper>
@@ -98,14 +107,14 @@ function Search(props) {
         <table>
           <thead>
             <tr>
-              {theadOptions.map((item) => (
-                <ThWrapper>{item}</ThWrapper>
+              {theadOptions.map((item, i) => (
+                <ThWrapper key = {i}>{item}</ThWrapper>
               ))}
             </tr>
           </thead>
           <tbody>
             {posts.map((item, index) => (
-              <tr key = {index}>
+              <tr key={index}>
                 <TdWrapper>
                   <a href={item.link}>
                     <img style={{ width: "10vw" }} src={item.image}></img>
@@ -118,8 +127,8 @@ function Search(props) {
                 <TdWrapper name="userRating">{item.userRating}</TdWrapper>
                 <TdWrapper>
                   <AddCircleOutlineIcon
-                    baseClassName="fas"
-                    className="fa-plus-circle"
+                    className="fas fa-plus-circle"
+                    
                     sx={{ fontSize: 30 }}
                     onClick={() => {
                       setImageUrl(item.image);
@@ -138,7 +147,7 @@ function Search(props) {
           <FormWrapper ref={modalRef}>
             <form
               onSubmit={(e) => {
-                onsubmit(e)
+                onsubmit(e);
               }}
             >
               <CloseIconWrapper>
@@ -152,7 +161,7 @@ function Search(props) {
               <p>
                 <img
                   name="image"
-                  value={imageUrl}
+                  defaultValue={imageUrl}
                   style={{ width: "10vw" }}
                   src={imageUrl}
                 ></img>
@@ -161,7 +170,7 @@ function Search(props) {
                 <input
                   type="text"
                   name="title"
-                  value={title}
+                  defaultValue={title}
                   placeholder={title}
                 ></input>
               </p>
@@ -169,7 +178,7 @@ function Search(props) {
                 <input
                   type="text"
                   name="pubDate"
-                  value={pubDate}
+                  defaultValue={pubDate}
                   placeholder={pubDate}
                 ></input>
               </p>
@@ -177,7 +186,7 @@ function Search(props) {
                 <input
                   type="text"
                   name="userRating"
-                  value={userRating}
+                  defaultValue={userRating}
                   placeholder={userRating}
                 ></input>
               </p>

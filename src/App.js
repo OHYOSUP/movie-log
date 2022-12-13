@@ -25,6 +25,7 @@ function App() {
     pubDate,
     userRating,
     note = null;
+
   for (let i = 0; i < myLogArr.length; i++) {
     if (myLogArr[i].id === currentId) {
       title = myLogArr[i].title;
@@ -74,48 +75,17 @@ function App() {
                         };
                         const newLogs = [...myLogArr];
                         newLogs.push(newLog);
-                        console.log(newLogs);
+                        // console.log(newLogs);
                         setCurrentId(nextId);
                         setNextId(nextId + 1);
                         setMyLogArr(newLogs);
+
+                        
                       }}
                     ></Search>
                   }
                 ></Route>
-                <Route
-                  path="/mypage"
-                  element={
-                    <Mypage
-                      onUpdate={(title, pubDate, image, userRating, note) => {
-                        const newMyLogArr = [...myLogArr];
-                        const updatedmyLogArr = {
-                          id: currentId,
-                          title: title,
-                          pubDate: pubDate,
-                          image: image,
-                          userRating: userRating,
-                          note: note,
-                        };
-                        console.log(newMyLogArr);
-                        console.log(updatedmyLogArr);
-
-                        // for (let i = 0; newMyLogArr.length > i; i++) {
-                        //   if (newMyLogArr[i].id === updatedmyLogArr.id) {
-                        //     newMyLogArr[i] = updatedmyLogArr;
-                        //     break;
-                        //   }
-                        // }
-                        setMyLogArr(arr => arr.map(item => item.id === currentId ? {...item, title, pubDate, image, userRating, note} : item));
-                        console.log(newMyLogArr);
-                      }}
-                      title={title}
-                      image={image}
-                      pubDate={pubDate}
-                      userRating={userRating}
-                      note={note}
-                    ></Mypage>
-                  }
-                ></Route>
+                <Route path="/mypage" element={<Mypage></Mypage>}></Route>
               </Routes>
             </Grid>
           </Grid>
